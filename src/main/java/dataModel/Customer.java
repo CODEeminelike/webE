@@ -1,24 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dataModel;
 
-import java.io.Serializable;
+import dataDAO.CustomerDAO;
+import java.sql.SQLException;
 
-public class Customer implements Serializable {
+public class Customer {
     private int iD;
     private String fname;
     private String lname;
-    private String email; // unique
-    private int cartID; // unique
+    private String email;
+    private String cartID;  // Chuyển cartID từ int sang String
     private String password;
 
-    // Constructor
-    public Customer() {
-    }
-
-    // Getters and setters
+    // Constructor, getters, setters
+    public Customer() {}
 
     public int getID() {
         return iD;
@@ -41,7 +35,7 @@ public class Customer implements Serializable {
     }
 
     public void setLname(String lname) {
-        this.lname  = lname;
+        this.lname = lname;
     }
 
     public String getEmail() {
@@ -52,11 +46,12 @@ public class Customer implements Serializable {
         this.email = email;
     }
 
-    public int getCartID() {
+    // Thay đổi kiểu của phương thức getter và setter cho cartID
+    public String getCartID() {
         return cartID;
     }
 
-    public void setCartID(int cartID) {
+    public void setCartID(String cartID) {
         this.cartID = cartID;
     }
 
@@ -65,8 +60,22 @@ public class Customer implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password  = password;
+        this.password = password;
     }
 
-    // Methods: login, register, updateProfile (chưa được triển khai)
+    // Phương thức đăng ký
+    public boolean register() throws SQLException {
+        CustomerDAO dao = new CustomerDAO();
+        return dao.addCustomer(this);  // Gọi CustomerDAO để thêm vào CSDL
+    }
+
+    // Phương thức đăng nhập
+    public boolean login() throws SQLException {
+        CustomerDAO dao = new CustomerDAO();
+        Customer customer = dao.getCustomerByEmail(this.email);  // Lấy khách hàng theo email
+        if (customer != null && customer.getPassword().equals(this.password)) {
+            return true;  // Đăng nhập thành công
+        }
+        return false;  // Đăng nhập thất bại
+    }
 }

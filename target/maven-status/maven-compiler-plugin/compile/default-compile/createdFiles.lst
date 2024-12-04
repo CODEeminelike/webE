@@ -1,5 +1,6 @@
 dataModel\CartItem.class
 appUtil\DBUtil.class
+controller\CustomerServlet.class
 controller\ProductListServlet.class
 dataModel\Customer.class
 dataDAO\CustomerDAO.class

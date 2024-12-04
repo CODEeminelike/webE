@@ -1,31 +1,36 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách Sản Phẩm</title>
+    <title>Danh sách sản phẩm</title>
 </head>
 <body>
-    <h1>Danh Sách Sản Phẩm</h1>
+    <h1>Danh sách sản phẩm</h1>
     
     <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Tên</th>
-            <th>Mô tả</th>
-            <th>Giá</th>
-        </tr>
-
-        <c:forEach var="product" items="${productList}">
+        <thead>
             <tr>
-                <td>${product.id}</td>
-                <td>${product.name}</td>
-                <td>${product.descrip}</td>
-                <td>${product.price}</td>
+                <th>ID</th>
+                <th>Tên sản phẩm</th>
+                <th>Ảnh sản phẩm</th>
+                <th>Giá</th>
             </tr>
-        </c:forEach>
+        </thead>
+        <tbody>
+            <!-- Duyệt qua danh sách sản phẩm -->
+            <c:forEach var="product" items="${productList}">
+                <tr>
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <!-- Hiển thị ảnh sản phẩm -->
+                    <td><img src="${product.linkImage}" alt="${product.name}" width="100" height="100"/></td>
+                    <td>${product.price}</td>
+                </tr>
+            </c:forEach>
+        </tbody>
     </table>
 </body>
 </html>
