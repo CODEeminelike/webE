@@ -1,18 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dataDAO;
-
-
 
 import dataModel.*;
 import appUtil.DBUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +11,15 @@ public class CartDAO {
 
     // Phương thức thêm mới giỏ hàng
     public boolean addCart(Cart cart) {
-        try (Connection connection = DBUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO Cart (customerID) VALUES (?)")) {
+        String query = "INSERT INTO Cart (customerID) VALUES (?)";
+        Connection connection = null;
+        PreparedStatement statement = null;
 
-            statement.setInt(1, cart.getCustomterID());
+        try {
+            connection = DBUtil.getConnection();  // Lấy kết nối từ DBUtil
+            statement = connection.prepareStatement(query);
+
+            statement.setInt(1, cart.getCustomterID());  // Vẫn giữ customerID là int
 
             int rowsInserted = statement.executeUpdate();
             return rowsInserted > 0;
@@ -31,46 +27,81 @@ public class CartDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            DBUtil.closeConnection();  // Đảm bảo đóng kết nối
+            closeResources(statement, null);  // Đảm bảo đóng PreparedStatement
         }
     }
 
-    // Phương thức lấy thông tin giỏ hàng theo ID
-    public Cart getCartById(int cartId) {
-        try (Connection connection = DBUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Cart WHERE cartID = ?")) {
+    // Hàm lấy danh sách CartItem từ cartID
+    public List<CartItem> getCartItemsByCartID(String cartID) throws SQLException {
+        String query = "SELECT * FROM CartItem WHERE cartID = ?";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<CartItem> cartItems = new ArrayList<>();
 
-            statement.setInt(1, cartId);
+        try {
+            connection = DBUtil.getConnection();  // Lấy kết nối từ DBUtil
+            statement = connection.prepareStatement(query);
+            statement.setString(1, cartID);
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    Cart cart = new Cart();
-                    // Lấy danh sách CartItem từ CartItemDAO
-                    CartItemDAO cartItemDAO = new CartItemDAO();
-                    List<CartItem> cartItems = cartItemDAO.getCartItemsByCartId(cartId);
-                    cart.setCartItem(cartItems);
-                    cart.setCustomterID(resultSet.getInt("customerID"));
-                    return cart;
-                }
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                // Lấy thông tin CartItem từ ResultSet
+                CartItem cartItem = new CartItem();
+                cartItem.setID(resultSet.getInt("iD"));
+                cartItem.setCartID(resultSet.getString("cartID"));
+                cartItem.setProduct(resultSet.getInt("productID"));
+                cartItem.setMount(resultSet.getInt("mount"));
+
+                // Thêm vào danh sách
+                cartItems.add(cartItem);
             }
 
+        } finally {
+            DBUtil.closeConnection();  // Đảm bảo đóng kết nối
+            closeResources(statement, resultSet);  // Đảm bảo đóng PreparedStatement và ResultSet
+        }
+
+        return cartItems;
+    }
+    
+    // Phương thức lấy thông tin giỏ hàng theo ID
+    
+
+    // Phương thức cập nhật giỏ hàng (giả sử có)
+    public boolean updateCart(Cart cart) {
+        // Code cập nhật giỏ hàng
+        return false;  // Placeholder
+    }
+
+    // Đóng các tài nguyên PreparedStatement và ResultSet
+    private void closeResources(PreparedStatement statement, ResultSet resultSet) {
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
     }
+    
+    
+    // Phương thức xóa tất cả các sản phẩm trong giỏ hàng
+    public boolean deleteCartItemsByCartID(String cartID) throws SQLException {
+        String query = "DELETE FROM CartItem WHERE cartID = ?";
+        Connection connection = null;
+        PreparedStatement statement = null;
 
-    // Phương thức cập nhật giỏ hàng (thường không cần thiết vì chỉ cần cập nhật CartItem)
-    public boolean updateCart(Cart cart) {
-        // Triển khai nếu cần thiết
-        return false;
-    }
-
-    // Phương thức xóa giỏ hàng
-    public boolean deleteCart(int cartId) {
-        try (Connection connection = DBUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement("DELETE FROM Cart WHERE cartID = ?")) {
-
-            statement.setInt(1, cartId);
+        try {
+            connection = DBUtil.getConnection();  // Kết nối đến cơ sở dữ liệu
+            statement = connection.prepareStatement(query);
+            statement.setString(1, cartID);  // Set cartID để xóa các mục tương ứng với giỏ hàng của người dùng
 
             int rowsDeleted = statement.executeUpdate();
             return rowsDeleted > 0;
@@ -78,6 +109,11 @@ public class CartDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            DBUtil.closeConnection();  // Đảm bảo đóng kết nối
+            closeResources(statement, null);  // Đảm bảo đóng PreparedStatement
         }
     }
+    
+    
 }

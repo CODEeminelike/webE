@@ -64,11 +64,21 @@ public class Customer {
     }
 
     // Phương thức đăng ký
-    public boolean register() throws SQLException {
-        CustomerDAO dao = new CustomerDAO();
-        return dao.addCustomer(this);  // Gọi CustomerDAO để thêm vào CSDL
+   public boolean register() throws SQLException {
+    CustomerDAO dao = new CustomerDAO();
+    
+    // Kiểm tra nếu email đã tồn tại trong cơ sở dữ liệu
+    if (dao.isEmailExist(this.email)) {
+        // Nếu email đã tồn tại, trả về false
+        return false;
     }
+    
+    // Nếu email chưa tồn tại, thực hiện thêm khách hàng mới
+    return dao.addCustomer(this);
+}
 
+
+    // Phương thức đăng nhập
     // Phương thức đăng nhập
     public boolean login() throws SQLException {
         CustomerDAO dao = new CustomerDAO();
@@ -76,6 +86,17 @@ public class Customer {
         if (customer != null && customer.getPassword().equals(this.password)) {
             return true;  // Đăng nhập thành công
         }
-        return false;  // Đăng nhập thất bại
+        return false;  // Đăng nhập thất bại (không tìm thấy khách hàng hoặc mật khẩu sai)
     }
+    
+    public boolean updateProfile() throws SQLException {
+        CustomerDAO dao = new CustomerDAO();
+
+        // Kiểm tra nếu email mới trùng với email đã có trong cơ sở dữ liệu
+        
+
+        // Cập nhật thông tin khách hàng vào cơ sở dữ liệu
+        return dao.updateCustomer(this);
+    }
+
 }

@@ -3,8 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dataModel;
-
+import dataDAO.CartItemDAO;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Cart implements Serializable {
@@ -15,7 +16,13 @@ public class Cart implements Serializable {
     public Cart() {
     }
 
-     
+     private CartItemDAO cartItemDAO = new CartItemDAO();
+
+    // Hàm lấy danh sách CartItem từ email của khách hàng
+    public List<CartItem> getCartItemsByEmail(String email) throws SQLException {
+        // Dùng email làm cartID để lấy danh sách CartItem
+        return cartItemDAO.getCartItemsByCartID(email);
+    }
 
     public List<CartItem> getCartItem() {
         return cartItem;
@@ -33,5 +40,12 @@ public class Cart implements Serializable {
         this.customterID = customterID;
     }
 
-    // Methods: gettotalPrice, thêm/bớt cartItem, showListItem, Payment (chưa được triển khai)
+    // Phương thức xử lý thanh toán và xóa giỏ hàng
+    public boolean processPayment(String cartID) throws SQLException {
+        // 1. Xử lý thanh toán (giả lập thanh toán thành công)
+        // Bạn có thể thêm logic xử lý thanh toán thực tế tại đây (ví dụ: lưu thông tin đơn hàng vào cơ sở dữ liệu, etc.)
+
+        // 2. Sau khi thanh toán thành công, xóa tất cả các CartItem trong giỏ hàng
+        return cartItemDAO.deleteCartItemsByCartID(cartID);
+    }
 }

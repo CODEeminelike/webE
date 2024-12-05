@@ -1,7 +1,8 @@
 package dataModel;
 
 import java.io.Serializable;
-
+import dataDAO.*;
+import java.util.List;
 public class Product implements Serializable {
     private int id;
     private String name;
@@ -13,7 +14,17 @@ public class Product implements Serializable {
     // Constructor
     public Product() {
     }
-
+     public  List<Product> getAllProducts() {
+        ProductDAO productDAO = new ProductDAO();
+        return productDAO.getAllProducts();  // Gọi tới phương thức DAO để lấy tất cả sản phẩm
+    }
+     
+      // Phương thức lấy sản phẩm theo category
+    public  List<Product> getProductsByCategory(String category) {
+        ProductDAO productDAO = new ProductDAO();
+        return productDAO.getProductsByCategory(category);  // Gọi tới phương thức DAO để lấy sản phẩm theo category
+    }
+     
     // Getters and setters
     public int getId() {
         return id;

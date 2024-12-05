@@ -1,0 +1,105 @@
+/* Tổng thể */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Tiêu đề trang */
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+/* Phần form */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Nhãn cho các trường nhập liệu */
+label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: inline-block;
+    color: #333;
+}
+
+/* Các trường nhập liệu */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+/* Hiệu ứng hover và focus */
+input[type="text"]:hover, input[type="password"]:hover {
+    border-color: #6c63ff;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #6c63ff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+}
+
+/* Nút submit */
+input[type="submit"] {
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+/* Hiệu ứng hover cho nút submit */
+input[type="submit"]:hover {
+    background-color: #5a52d9;
+}
+
+/* Nút đăng xuất */
+input[type="submit"]:last-child {
+    background-color: #f44336;
+    width: 100%;
+    margin-top: 20px;
+}
+
+input[type="submit"]:last-child:hover {
+    background-color: #e53935;
+}
+
+/* Thông báo */
+p {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+p.success {
+    color: green;
+}
+
+p.error {
+    color: red;
+}

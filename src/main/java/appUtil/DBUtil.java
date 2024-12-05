@@ -1,4 +1,3 @@
-
 package appUtil;
 
 import java.sql.Connection;
@@ -29,10 +28,11 @@ public class DBUtil {
     }
 
     // Phương thức đóng kết nối
-    public static void closeConnection() {
+     public static void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
+                connection = null; // Đảm bảo set lại kết nối sau khi đóng
             }
         } catch (SQLException e) {
             e.printStackTrace();
