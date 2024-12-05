@@ -71,9 +71,9 @@ public class OrderServlet extends HttpServlet {
 
                 if (isPaymentProcessed) {
                     // Hiển thị thông báo thanh toán thành công
-                    response.getWriter().println("<h1>Thanh toán thành công!</h1>");
-                    response.getWriter().println("<p>Tổng giá trị đơn hàng: " + totalOrderPrice + " VND</p>");
-                    response.getWriter().println("<a href='index.jsp'>Tiếp tục mua sắm</a>");
+                    response.getWriter().println("<h1>Thanh toan thanh cong!</h1>");
+                    response.getWriter().println("<p>Tong gia tri don hang: " + totalOrderPrice + " VND</p>");
+                    response.getWriter().println("<a href='productList.jsp'>Tro ve</a>");
                 } else {
                     response.getWriter().println("Error occurred while processing the payment.");
                 }

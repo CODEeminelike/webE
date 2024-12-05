@@ -1,10 +1,12 @@
 appUtil\DBUtil.class
+Email\EmailSender.class
 controller\CartServlet.class
 controller\CustomerServlet.class
 dataModel\Customer.class
 controller\OrderServlet.class
 dataDAO\CartDAO.class
 dataModel\Product.class
+Email\EmailSender$1.class
 dataModel\CartItem.class
 controller\ProductListServlet.class
 controller\CartServlet2.class

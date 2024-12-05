@@ -3,8 +3,10 @@
 <html>
 <head>
     <title>Trang Sản phẩm</title>
+    
 </head>
 <body>
+    <img src="img/11.jpg" alt='Xóa' >
     <div class="header">
         <ul>
             <a href="${pageContext.request.contextPath}/controller/profileServlet?action=viewProfile">Thông tin cá nhân</a>
