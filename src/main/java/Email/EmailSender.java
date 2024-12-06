@@ -12,38 +12,37 @@ import java.util.Properties;
 
 public class EmailSender {
 
-    public static void sendEmail(String toEmail, String subject, String messageText) {
-        String fromEmail = "your-email@gmail.com"; // Thay bằng email của bạn
-        String password = "your-email-password";   // Thay bằng mật khẩu của bạn
-        String host = "smtp.gmail.com";            // SMTP server (dùng Gmail trong trường hợp này)
+    public static void sendMail(String to, String from,
+                                    String subject, String body, boolean bodyIsHTML)
+                throws MessagingException {
 
-        // Cấu hình các thuộc tính cho session
-        Properties properties = new Properties();
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", "587");
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true"); // Bật chế độ mã hóa TLS
-
-        // Tạo session xác thực
-        Session session = Session.getInstance(properties, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(fromEmail, password);
-            }
-        });
-
-        try {
-            // Tạo message và cấu hình các thông tin gửi
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(fromEmail));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+            // 1 - get a mail session
+            Properties props = new Properties();
+            props.put("mail.transport.protocol", "smtps");
+            props.put("mail.smtps.host", "smtp.gmail.com");
+            props.put("mail.smtps.port", 465);
+            props.put("mail.smtps.auth", "true");
+            props.put("mail.smtps.quitwait", "false");
+            Session session = Session.getDefaultInstance(props);
+            session.setDebug(true);
+            // 2 - create a message
+            Message message = new MimeMessage(session);
             message.setSubject(subject);
-            message.setText(messageText);
+            if (bodyIsHTML) {
+                message.setContent(body, "text/html");
+            } else {
+                message.setText(body);
+            }
+            // 3 - address the message
+            Address fromAddress = new InternetAddress(from);
+            Address toAddress = new InternetAddress(to);
+            message.setFrom(fromAddress);
+            message.setRecipient(Message.RecipientType.TO, toAddress);
 
-            // Gửi email
-            Transport.send(message);
-            System.out.println("Email sent successfully!");
-        } catch (MessagingException e) {
-            e.printStackTrace();
+            // 4 - send the message
+            Transport transport = session.getTransport();
+            transport.connect("chungkhoa456@gmail.com", "hmgx osqq gmsn epyi");
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
         }
-    }
 }
