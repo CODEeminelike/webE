@@ -54,6 +54,9 @@
     <a href="<%= request.getContextPath() %>/customerServlet?action=register">
         <button type="button">Đăng Ký</button>
     </a>
+    <a href="<%= request.getContextPath() %>/page/adminLogin.jsp">
+        <button type="button">administrator</button>
+    </a>
 
 </body>
 </html>

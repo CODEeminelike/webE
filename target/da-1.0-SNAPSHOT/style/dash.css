@@ -1,0 +1,97 @@
+/* Tổng thể trang */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+/* Header */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    z-index: 10;
+}
+
+/* Navbar */
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 0 20px;
+    position: relative;
+}
+
+/* Liên kết */
+nav ul li a,
+nav ul li button {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 30px;
+    background-color: #ff5f5f;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Khi rê chuột vào các nút */
+nav ul li a:hover,
+nav ul li button:hover {
+    background-color: #ff3333;
+    transform: translateY(-5px);
+    border-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Tạo hiệu ứng xoay cho các nút */
+nav ul li button {
+    transition: transform 0.3s ease;
+}
+
+nav ul li button:hover {
+    transform: rotate(5deg);
+}
+
+/* Form đăng xuất */
+form {
+    display: inline-block;
+    margin: 0;
+}
+
+form input[type="hidden"] {
+    display: none;
+}
+
+/* Đảm bảo các form được canh giữa */
+form button {
+    padding: 10px 20px;
+    background: linear-gradient(to left, #6a11cb, #2575fc);
+    border: none;
+    color: #fff;
+    border-radius: 25px;
+    transition: transform 0.3s ease;
+}
+
+form button:hover {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    transform: scale(1.1);
+}
+
+/* Đặt các liên kết nằm trong form */
+form button:focus {
+    outline: none;
+}

@@ -2,8 +2,11 @@ package dataDAO;
 
 import dataModel.Customer;
 import appUtil.DBUtil;
+import appUtil.PBKDF2Util;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerDAO {
 
@@ -100,7 +103,63 @@ public class CustomerDAO {
         closeResources(statement, null);  // Đảm bảo đóng PreparedStatement
     }
 }
+// Phương thức kiểm tra đăng nhập của admin từ bảng Admin
+public boolean loginAdmin(String username, String password) throws SQLException, Exception {
+    String query = "SELECT * FROM admin WHERE username = ?";
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultSet = null;
 
+    try {
+        connection = DBUtil.getConnection(); // Lấy kết nối từ DBUtil
+        statement = connection.prepareStatement(query);
+        statement.setString(1, username);
+        resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            // Lấy mật khẩu đã băm từ cơ sở dữ liệu
+            String storedPassword = resultSet.getString("password");
+
+            // Kiểm tra mật khẩu người dùng nhập vào với mật khẩu đã băm
+            return PBKDF2Util.checkPassword(password, storedPassword);
+        }
+    } finally {
+        DBUtil.closeConnection(); // Đảm bảo đóng kết nối
+        closeResources(statement, resultSet); // Đảm bảo đóng PreparedStatement và ResultSet
+    }
+    return false; // Nếu không tìm thấy username, trả về false
+}
+
+
+    // Phương thức lấy tất cả khách hàng
+    // Phương thức lấy tất cả khách hàng
+    public List<Customer> getAllCustomers() throws SQLException {
+    List<Customer> customers = new ArrayList<>();
+    String query = "SELECT * FROM Customer";  // SQL để lấy tất cả khách hàng
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultSet = null;
+
+    try {
+        connection = DBUtil.getConnection();  // Kết nối cơ sở dữ liệu
+        statement = connection.prepareStatement(query);
+        resultSet = statement.executeQuery();
+        
+        while (resultSet.next()) {
+            Customer customer = new Customer();
+            customer.setID(resultSet.getInt("id"));  // Đảm bảo lấy ID đúng
+            customer.setFname(resultSet.getString("fname"));
+            customer.setLname(resultSet.getString("lname"));
+            customer.setEmail(resultSet.getString("email"));
+            customer.setAddress(resultSet.getString("address"));
+            customers.add(customer);  // Thêm vào danh sách
+        }
+    } finally {
+        DBUtil.closeConnection();
+        closeResources(statement, resultSet);
+    }
+    return customers;  // Trả về danh sách khách hàng
+}
 
 
     // Hàm đóng các tài nguyên (PreparedStatement, ResultSet)
