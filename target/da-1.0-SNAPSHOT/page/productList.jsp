@@ -11,12 +11,14 @@
 
 </head>
 <body>
-     <!-- Link đến trang thông tin cá nhân và đăng xuất -->
+     <!-- Link đến trang thông tin cá nhân và đăng xuất /order?action=viewHistory-->
     <div class="header">
         <ul>
             <li><a href="${pageContext.request.contextPath}/page/editProfile.jsp">Thông tin cá nhân</a></li>
             <li><a href="${pageContext.request.contextPath}/page/logout.jsp">Đăng xuất</a></li>
             <li><a href="${pageContext.request.contextPath}/page/Cart2.jsp">Giỏ Hàng</a></li>
+              <li><a href="${pageContext.request.contextPath}/order?action=viewHistory">Lịch sử mua hàng</a></li>
+
         </ul>
     </div>
     <h1>Danh sách sản phẩm</h1>

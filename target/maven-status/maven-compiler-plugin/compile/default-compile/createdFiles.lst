@@ -5,9 +5,12 @@ controller\CustomerServlet.class
 dataModel\Customer.class
 controller\OrderServlet.class
 dataDAO\CartDAO.class
+dataDAO\OrdersDAO.class
+dataModel\Orders.class
 dataModel\Product.class
 dataModel\CartItem.class
 controller\ProductListServlet.class
+controller\CustomerDA0.class
 controller\CartServlet2.class
 dataDAO\CustomerDAO.class
 controller\ProfileServlet.class

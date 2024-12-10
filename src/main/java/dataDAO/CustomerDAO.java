@@ -27,58 +27,61 @@ public class CustomerDAO {
     }
 
     // Phương thức thêm khách hàng mới
-    public boolean addCustomer(Customer customer) throws SQLException {
-        String query = "INSERT INTO Customer (fname, lname, email, cartID, password) VALUES (?, ?, ?, ?, ?)";
-        Connection connection = null;
-        PreparedStatement statement = null;
+   public boolean addCustomer(Customer customer) throws SQLException {
+    String query = "INSERT INTO Customer (fname, lname, email, cartID, password, address) VALUES (?, ?, ?, ?, ?, ?)";
+    Connection connection = null;
+    PreparedStatement statement = null;
 
-        try {
-            connection = DBUtil.getConnection();  // Lấy kết nối từ DBUtil
-            statement = connection.prepareStatement(query);
-            statement.setString(1, customer.getFname());
-            statement.setString(2, customer.getLname());
-            statement.setString(3, customer.getEmail());
-            statement.setString(4, customer.getCartID());
-            statement.setString(5, customer.getPassword());
+    try {
+        connection = DBUtil.getConnection();  // Lấy kết nối từ DBUtil
+        statement = connection.prepareStatement(query);
+        statement.setString(1, customer.getFname());
+        statement.setString(2, customer.getLname());
+        statement.setString(3, customer.getEmail());
+        statement.setString(4, customer.getCartID());
+        statement.setString(5, customer.getPassword());
+        statement.setString(6, customer.getAddress());  // Add address
 
-            return statement.executeUpdate() > 0;  // Nếu thêm thành công, trả về true
-        } finally {
-            DBUtil.closeConnection();  // Đảm bảo đóng kết nối
-            closeResources(statement, null);  // Đảm bảo đóng PreparedStatement
-        }
+        return statement.executeUpdate() > 0;  // Nếu thêm thành công, trả về true
+    } finally {
+        DBUtil.closeConnection();  // Đảm bảo đóng kết nối
+        closeResources(statement, null);  // Đảm bảo đóng PreparedStatement
     }
+}
+
 
     // Phương thức lấy thông tin khách hàng theo email
-    public Customer getCustomerByEmail(String email) throws SQLException {
-        String query = "SELECT * FROM Customer WHERE email = ?";
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
+   public Customer getCustomerByEmail(String email) throws SQLException {
+    String query = "SELECT * FROM Customer WHERE email = ?";
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultSet = null;
 
-        try {
-            connection = DBUtil.getConnection();  // Lấy kết nối từ DBUtil
-            statement = connection.prepareStatement(query);
-            statement.setString(1, email);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                Customer customer = new Customer();
-                customer.setFname(resultSet.getString("fname"));
-                customer.setLname(resultSet.getString("lname"));
-                customer.setEmail(resultSet.getString("email"));
-                customer.setCartID(resultSet.getString("cartID"));
-                customer.setPassword(resultSet.getString("password"));
-                return customer;
-            }
-        } finally {
-            DBUtil.closeConnection();  // Đảm bảo đóng kết nối
-            closeResources(statement, resultSet);  // Đảm bảo đóng PreparedStatement và ResultSet
+    try {
+        connection = DBUtil.getConnection();  // Lấy kết nối từ DBUtil
+        statement = connection.prepareStatement(query);
+        statement.setString(1, email);
+        resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            Customer customer = new Customer();
+            customer.setFname(resultSet.getString("fname"));
+            customer.setLname(resultSet.getString("lname"));
+            customer.setEmail(resultSet.getString("email"));
+            customer.setCartID(resultSet.getString("cartID"));
+            customer.setPassword(resultSet.getString("password"));
+            customer.setAddress(resultSet.getString("address"));  // Add address
+            return customer;
         }
-        return null;  // Nếu không tìm thấy khách hàng, trả về null
+    } finally {
+        DBUtil.closeConnection();  // Đảm bảo đóng kết nối
+        closeResources(statement, resultSet);  // Đảm bảo đóng PreparedStatement và ResultSet
     }
+    return null;  // Nếu không tìm thấy khách hàng, trả về null
+}
 
     // Phương thức cập nhật thông tin khách hàng
    public boolean updateCustomer(Customer customer) throws SQLException {
-    String query = "UPDATE Customer SET fname = ?, lname = ?, password = ? WHERE email = ?";
+    String query = "UPDATE Customer SET fname = ?, lname = ?, password = ?, address = ? WHERE email = ?";
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -88,7 +91,8 @@ public class CustomerDAO {
         statement.setString(1, customer.getFname());
         statement.setString(2, customer.getLname());
         statement.setString(3, customer.getPassword());
-        statement.setString(4, customer.getEmail());  // Giữ nguyên email (không thay đổi)
+        statement.setString(4, customer.getAddress());  // Update address
+        statement.setString(5, customer.getEmail());  // Giữ nguyên email (không thay đổi)
 
         return statement.executeUpdate() > 0;  // Nếu cập nhật thành công, trả về true
     } finally {
@@ -96,6 +100,7 @@ public class CustomerDAO {
         closeResources(statement, null);  // Đảm bảo đóng PreparedStatement
     }
 }
+
 
 
     // Hàm đóng các tài nguyên (PreparedStatement, ResultSet)

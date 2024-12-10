@@ -76,20 +76,25 @@
     </c:if>
 
     <!-- Form đăng ký -->
-    <form action="<%= request.getContextPath() %>/customerServlet?action=register" method="post">
-        <label for="fname">Họ</label>
-        <input type="text" id="fname" name="fname" required>
-        
-        <label for="lname">Tên</label>
-        <input type="text" id="lname" name="lname" required>
-        
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-        
-        <label for="password">Mật khẩu</label>
-        <input type="password" id="password" name="password" required>
-        
-        <button type="submit">Đăng ký</button>
-    </form>
+   <form action="<%= request.getContextPath() %>/customerServlet?action=register" method="post">
+    <label for="fname">Họ</label>
+    <input type="text" id="fname" name="fname" required>
+    
+    <label for="lname">Tên</label>
+    <input type="text" id="lname" name="lname" required>
+    
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
+    
+    <label for="password">Mật khẩu</label>
+    <input type="password" id="password" name="password" required>
+    
+    <!-- Thêm trường địa chỉ -->
+    <label for="address">Địa chỉ</label>
+    <input type="text" id="address" name="address" required>
+    
+    <button type="submit">Đăng ký</button>
+</form>
+
 </body>
 </html>

@@ -4,6 +4,8 @@
  */
 package dataModel;
 import dataDAO.CartItemDAO;
+import dataDAO.OrdersDAO;
+import dataDAO.OrdersDAO;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
@@ -41,11 +43,28 @@ public class Cart implements Serializable {
     }
 
     // Phương thức xử lý thanh toán và xóa giỏ hàng
-    public boolean processPayment(String cartID) throws SQLException {
-        // 1. Xử lý thanh toán (giả lập thanh toán thành công)
-        // Bạn có thể thêm logic xử lý thanh toán thực tế tại đây (ví dụ: lưu thông tin đơn hàng vào cơ sở dữ liệu, etc.)
+   public boolean processPayment(String cartID, String email, String address, double totalOrderPrice) throws SQLException {
+    // 1. Tạo đơn hàng mới
+    Orders order = new Orders();
+    order.setDate(new java.sql.Date(System.currentTimeMillis())); // Lấy ngày hiện tại
+    order.setTime(new java.sql.Time(System.currentTimeMillis())); // Lấy giờ hiện tại
+    order.setEmail(email); // Email người dùng
+    order.setAddress(address); // Địa chỉ người dùng
+    order.setTotalPrice(totalOrderPrice); // Tổng giá trị đơn hàng
 
+    // Lưu đơn hàng vào cơ sở dữ liệu
+    OrdersDAO ordersDAO = new OrdersDAO();  // Sử dụng OrdersDAO thay vì OrderDAO
+    boolean isOrderCreated = ordersDAO.addOrder(order);  // Lưu đơn hàng vào CSDL
+
+    if (isOrderCreated) {
         // 2. Sau khi thanh toán thành công, xóa tất cả các CartItem trong giỏ hàng
-        return cartItemDAO.deleteCartItemsByCartID(cartID);
+        boolean areItemsDeleted = cartItemDAO.deleteCartItemsByCartID(cartID);  // Giả sử cartItemDAO đã được khởi tạo
+
+        return areItemsDeleted; // Trả về kết quả xóa CartItem
+    } else {
+        return false; // Nếu tạo đơn hàng không thành công, trả về false
     }
 }
+
+}
+

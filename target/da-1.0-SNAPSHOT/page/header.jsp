@@ -1,20 +1,69 @@
-<%@ page import="dataModel.Customer" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="dataDAO.OrdersDAO" %>
+<%@ page import="dataModel.Orders" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.sql.SQLException" %>
+
 <html>
 <head>
-    <title>Trang S·∫£n ph·∫©m</title>
-    
+    <title>L?ch s? ??n h‡ng</title>
 </head>
 <body>
-    <img src="img/11.jpg" alt='X√≥a' >
-    <div class="header">
-        <ul>
-            <a href="${pageContext.request.contextPath}/controller/profileServlet?action=viewProfile">Th√¥ng tin c√° nh√¢n</a>
-<a href="${pageContext.request.contextPath}/controller/profileServlet?action=logout">ƒêƒÉng xu·∫•t</a>
+    <h1>L?ch s? ??n h‡ng</h1>
+    
+    <%
+        // L?y email t? session (Gi? s? email n‡y ?„ ???c l?u trong session khi ng??i d˘ng ??ng nh?p)
+        String email = (String) session.getAttribute("email");
 
-        </ul>
-    </div>
-    <h1>Ch√†o m·ª´ng ƒë·∫øn v·ªõi trang s·∫£n ph·∫©m</h1>
-    <!-- N·ªôi dung s·∫£n ph·∫©m ·ªü ƒë√¢y -->
+        // Ki?m tra xem email cÛ t?n t?i trong session khÙng
+        if (email != null && !email.isEmpty()) {
+            try {
+                // T?o ??i t??ng OrdersDAO ?? g?i ph??ng th?c getOrderByEmail
+                OrdersDAO ordersDAO = new OrdersDAO();
+                List<Orders> ordersList = ordersDAO.getOrderByEmail(email); // L?y danh s·ch ??n h‡ng t? email
+
+                // Ki?m tra n?u cÛ ??n h‡ng
+                if (ordersList.isEmpty()) {
+                    out.println("<p>KhÙng cÛ ??n h‡ng n‡o ???c tÏm th?y.</p>");
+                } else {
+                    // Hi?n th? danh s·ch ??n h‡ng trong b?ng
+                    out.println("<table border='1'>");
+                    out.println("<thead>");
+                    out.println("<tr>");
+                    out.println("<th>ID</th>");
+                    out.println("<th>Ng‡y</th>");
+                    out.println("<th>Gi?</th>");
+                    out.println("<th>Email</th>");
+                    out.println("<th>??a ch?</th>");
+                    out.println("<th>T?ng gi· tr?</th>");
+                    out.println("</tr>");
+                    out.println("</thead>");
+                    out.println("<tbody>");
+
+                    // L?p qua danh s·ch ??n h‡ng v‡ hi?n th? thÙng tin c?a m?i ??n h‡ng
+                    for (Orders order : ordersList) {
+                        out.println("<tr>");
+                        out.println("<td>" + order.getId() + "</td>");
+                        out.println("<td>" + order.getDate() + "</td>");
+                        out.println("<td>" + order.getTime() + "</td>");
+                        out.println("<td>" + order.getEmail() + "</td>");
+                        out.println("<td>" + order.getAddress() + "</td>");
+                        out.println("<td>" + order.getTotalPrice() + "</td>");
+                        out.println("</tr>");
+                    }
+
+                    out.println("</tbody>");
+                    out.println("</table>");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                out.println("<p>?„ x?y ra l?i khi truy v?n d? li?u: " + e.getMessage() + "</p>");
+            }
+        } else {
+            out.println("<p>Vui lÚng ??ng nh?p tr??c khi xem l?ch s? ??n h‡ng.</p>");
+        }
+    %>
+
+    <br>
+    <a href="index.jsp">Tr? v? trang ch?</a>
 </body>
 </html>

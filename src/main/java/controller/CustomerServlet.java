@@ -35,74 +35,65 @@ public class CustomerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-       if ("register".equals(action)) {
-        // Lấy các tham số từ form đăng ký
-        String fname = request.getParameter("fname");
-        String lname = request.getParameter("lname");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String cartID = email;  // CartID có thể tạo sau khi đăng ký thành công
+        if ("register".equals(action)) {
+            // Lấy các tham số từ form đăng ký
+            String fname = request.getParameter("fname");
+            String lname = request.getParameter("lname");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String cartID = email;  // CartID có thể tạo sau khi đăng ký thành công
+            String address = request.getParameter("address");  // Get address from form
 
-        Customer customer = new Customer();
-        customer.setFname(fname);
-        customer.setLname(lname);
-        customer.setEmail(email);
-        customer.setPassword(password);
-        customer.setCartID(cartID);
-        
-        try {
-            // gui email thanh cong
-            sendMail(email, request);
-            // Kiểm tra nếu đăng ký thành công
-            if (customer.register()) {
-                // Đăng ký thành công, chuyển hướng đến trang đăng nhập
-                response.sendRedirect(request.getContextPath() + "/customerServlet?action=login");
-            } else {
-                // Nếu đăng ký thất bại (ví dụ: email đã tồn tại)
-                request.setAttribute("errorMessage", "Đăng ký thất bại! Email đã tồn tại.");
+            Customer customer = new Customer();
+            customer.setFname(fname);
+            customer.setLname(lname);
+            customer.setEmail(email);
+            customer.setPassword(password);
+            customer.setCartID(cartID);
+            customer.setAddress(address);  // Set address here
+
+            try {
+                sendMail(email, request);
+                if (customer.register()) {
+                    response.sendRedirect(request.getContextPath() + "/customerServlet?action=login");
+                } else {
+                    request.setAttribute("errorMessage", "Đăng ký thất bại! Email đã tồn tại.");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/page/register.jsp");
+                    dispatcher.forward(request, response);
+                }
+            } catch (SQLException e) {
+                request.setAttribute("errorMessage", "Có lỗi xảy ra trong quá trình đăng ký. Vui lòng thử lại.");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/page/register.jsp");
                 dispatcher.forward(request, response);
             }
-        } catch (SQLException e) {
-            // Xử lý lỗi SQLException và gửi thông báo lỗi
-            request.setAttribute("errorMessage", "Có lỗi xảy ra trong quá trình đăng ký. Vui lòng thử lại.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/page/register.jsp");
-            dispatcher.forward(request, response);
-        }
         } else if ("login".equals(action)) {
-    // Đăng nhập
-    String email = request.getParameter("email");
-    String password = request.getParameter("password");
-    
-    Customer customer = new Customer();
-    customer.setEmail(email);
-    customer.setPassword(password);
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
 
-    try {
-        if (customer.login()) {
-            // Lưu thông tin khách hàng vào session
-            HttpSession session = request.getSession();
-            session.setAttribute("customer", customer);
-            session.setAttribute("email", email);  // Lưu email vào session
+            Customer customer = new Customer();
+            customer.setEmail(email);
+            customer.setPassword(password);
 
-            // Đăng nhập thành công, chuyển hướng đến trang chính
-            response.sendRedirect(request.getContextPath() + "/page/productList.jsp");
-        } else {
-            // Đăng nhập thất bại, quay lại trang đăng nhập
-            request.setAttribute("message", "Đăng nhập thất bại, vui lòng kiểm tra lại email và mật khẩu.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/page/login.jsp");
-            dispatcher.forward(request, response);
+            try {
+                if (customer.login()) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("customer", customer);
+                    session.setAttribute("email", email);
+                    response.sendRedirect(request.getContextPath() + "/page/productList.jsp");
+                } else {
+                    request.setAttribute("message", "Đăng nhập thất bại, vui lòng kiểm tra lại email và mật khẩu.");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/page/login.jsp");
+                    dispatcher.forward(request, response);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                request.setAttribute("message", "Có lỗi xảy ra trong quá trình xử lý. Vui lòng thử lại sau.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/page/login.jsp");
+                dispatcher.forward(request, response);
+            }
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        request.setAttribute("message", "Có lỗi xảy ra trong quá trình xử lý. Vui lòng thử lại sau.");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/page/login.jsp");
-        dispatcher.forward(request, response);
     }
-}
 
-}
-    
     public void sendMail(String email, HttpServletRequest request){
                     String from = "chungkhoa456@gmail.com";
                     String subject = "Đăng ký tài khoản thành công";
@@ -148,9 +139,5 @@ public class CustomerServlet extends HttpServlet {
                     request.setAttribute("errorMessage", "Gửi email thất bại. Vui lòng thử lại sau.");
                     this.log("Email gửi thất bại: " + e.getMessage());
                     }
-    }
-
-    
 }
-
-
+}
